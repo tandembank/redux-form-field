@@ -1,6 +1,8 @@
 # redux-form-field
 
-[redux-form](https://github.com/erikras/redux-form) is wonderful form management library using a redux store for managing form state. However, redux-form implies that your base components should be designed to fit its prop style of using `props.input` and `props.meta`, but this couples them with redux-form and makes them difficult to use out of context of redux-form.
+[redux-form](https://github.com/erikras/redux-form) is the wonderful form management library that uses a redux store under the hood for managing the forms state.
+
+However, redux-form implies that your base components should be designed to fit the redux-form prop style of using `props.input` and `props.meta` to pass state information and callbacks to the component. But this ends up coupling the base component to redux-form and makes them difficult to use your beautiful components out of context of redux-form. Unless you're willing to go through some pain.
 
 This was the aim of redux-form-field, to be able to decouple the basic/dumb visual component from our form library.
 
@@ -10,11 +12,13 @@ To achieve this there needs to be mapping between the 3 states of the redux-form
 Basic React Component -> redux-form Component -> redux-form Field
 ```
 
-Here the `Basic React Component` is the purely presentational component, built to look pretty, but pretty impractical in the eyes of redux-form
+Here the `Basic React Component` is the purely presentational component, built outside the context of redux-form to look pretty , but pretty impractical in the eyes of redux-form.
 
-#### Component
+#### redux-form Component
 
-Once we have this new shiny component that know not of the scary word of redux-form we need to convert it into a `redux-form Component`. This is a component that redux-form can use in the redux-form Field component prop.
+Once we have this new shiny component that you are so proud of you'd tell ya mumma about, that knows not of the scary word of redux-form, we need to convert it into a `redux-form Component`.
+
+This is a component that redux-form can use in the redux-form Field component prop.
 
 Confused by the terminology yet? Yep? Does this help?
 
@@ -30,11 +34,11 @@ You might say that as this is the most complex part why is the library not calle
 
 This mapping is achieved through mapping functions for `prop.meta` and `props.input`, inspired by how you might map redux state and dispatch props.
 
-#### Field
+#### redux-form Field
 
 Finally we provide a little helper function to tie it all together called `reduxFormField`, that wraps the `redux-form Component` in a `Field` component. This gives a much cleaner final appearance in the [final form](https://knowyourmeme.com/memes/this-isnt-even-my-final-form) as you can create variants of field.
 
-Suppose you have a text input `redux-form Component`, using `reduxFormField` you can turn it into a numeric field, a formatted field using redux-form [lifecycle](https://redux-form.com/7.1.2/docs/valuelifecycle.md/) events, just about any sort or variant.
+Suppose you have a text input `redux-form Component`, then using `reduxFormField` you can turn it into a numeric field, or perhaps a formatted field using redux-form [lifecycle](https://redux-form.com/7.1.2/docs/valuelifecycle.md/) events. Or really just about any sort or variant of the component using its props.
 
 ## Typescript
 
@@ -42,14 +46,15 @@ The library works great with typescript, providing the dumb component prop inter
 
 This means it is 100% type safe, but has a couple caveats.
 
-1. You MUST match the redux-form `props.input` types when using `mapInputKeys`
+1. You **MUST** match the redux-form `props.input` types when using `mapInputKeys`
 2. The final types can misleading in tool-tips, I suggest looking in the source code... if you dare :fearful:.
 
 ## React Native
 
 redux-form-field was born in a react-native project and is maintained in one currently, it works great.
 
-You do have to match event types though with using `mapInputKeys`
+You do have to match event types though when using `mapInputKeys`.
+For example, with a text input:
 
 ```typescript
 import {
@@ -165,6 +170,10 @@ export default TextInputFormComponent;
 
 ### redux-form Field
 
+Now we can create a numeric only text input redux-form form field component.
+
+Thats a mouthful :rainbow:
+
 ```typescript
 // NumericFormField.ts
 
@@ -192,7 +201,9 @@ export default NumericFormField;
 
 ### Usage
 
-Within the context of a redux-form form.
+Within the context of a redux-form form, we can render the new component, without any extra props required. :tada:
+
+The only required props here is the name of the field in the form, plus and required fields in the Basic Component own props.
 
 ```typescript
 import NumericFormField from './NumericFormField'
