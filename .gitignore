@@ -1,0 +1,19 @@
+# project
+lib/
+.jest/cache/
+
+# OSX
+.DS_Store
+
+
+# node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+.npmrc
+
+release/
+
+# coverage
+coverage
+test-results

@@ -1,0 +1,28 @@
+
+src/
+node_modules/
+.gitignore
+
+#tests
+test
+coverage
+
+#build tools
+.travis.yml
+.jenkins.yml
+.codeclimate.yml
+tsconfig.json
+yarn.lock
+.babelrc
+.huskyrc
+
+#linters
+.jscsrc
+.jshintrc
+.eslintrc*
+.prettierrc
+
+#editor settings
+.idea
+.editorconfig
+.vscode/

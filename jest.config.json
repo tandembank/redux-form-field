@@ -1,0 +1,26 @@
+{
+    "preset": "ts-jest/presets/js-with-babel",
+    "moduleFileExtensions": ["js", "json", "ts", "tsx"],
+    "setupFiles": ["<rootDir>/test/enzyme.ts"],
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "testPathIgnorePatterns": ["\\.snap$", "<rootDir>/node_modules/", "<rootDir>/lib/"],
+    "cacheDirectory": ".jest/cache",
+    "reporters": ["default"],
+    "coverageThreshold": {
+        "global": {
+            "branches": 85,
+            "functions": 85,
+            "lines": 85,
+            "statements": 85
+        }
+    },
+    "coveragePathIgnorePatterns": ["node_modules", "jest"],
+    "coverageReporters": ["lcov", "json", "text"],
+    "coverageDirectory": "coverage",
+    "globals": {
+        "ts-jest": {
+            "tsConfig": "tsconfig.json"
+        }
+    },
+    "testMatch": null
+}
