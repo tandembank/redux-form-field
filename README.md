@@ -1,5 +1,13 @@
 # redux-form-field
 
+-   [Motivation](#motivation)
+-   [Typescript](#typescript)
+-   [React Native](#react-native)
+-   [Javascript Example](#js-example)
+-   [Typescript Example](#ts-example)
+
+## <a name="motivation" />Motivation
+
 [redux-form](https://github.com/erikras/redux-form) is the wonderful form management library that uses a redux store under the hood for managing the forms state.
 
 However, redux-form implies that your base components should be designed to fit the redux-form prop style of using `props.input` and `props.meta` to pass state information and callbacks to the component. But this ends up coupling the base component to redux-form and makes them difficult to use your beautiful components out of context of redux-form. Unless you're willing to go through some pain.
@@ -40,7 +48,7 @@ Finally we provide a little helper function to tie it all together called `redux
 
 Suppose you have a text input `redux-form Component`, then using `reduxFormField` you can turn it into a numeric field, or perhaps a formatted field using redux-form [lifecycle](https://redux-form.com/7.1.2/docs/valuelifecycle.md/) events. Or really just about any sort or variant of the component using its props.
 
-## Typescript
+## <a name="typescript" />Typescript
 
 The library works great with typescript, providing the dumb component prop interface all the way up at the top level, and mixing in the redux-form types as it goes.
 
@@ -49,7 +57,7 @@ This means it is 100% type safe, but has a couple caveats.
 1. You **MUST** match the redux-form `props.input` types when using `mapInputKeys`
 2. The final types can misleading in tool-tips, I suggest looking in the source code... if you dare :fearful:.
 
-## React Native
+## <a name="react-native" />React Native
 
 redux-form-field was born in a react-native project and is maintained in one currently, it works great.
 
@@ -72,11 +80,11 @@ export interface ITextInputInputProps {
 }
 ```
 
-## Javascript Example
+## <a name="js-example" />Javascript Example
 
 Coming... Sometime?
 
-## Typescript Example
+## <a name="ts-example" />Typescript Example
 
 ### Basic Component
 
