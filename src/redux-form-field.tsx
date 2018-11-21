@@ -18,7 +18,7 @@ export type FormFieldProps<OwnProps, GivenProps = {}> = Omit<
  *
  * @returns redux-form Field capable component
  */
-const reduxFormField = <OwnProps, GivenProps = {}>(config: GivenProps) => (
+export const reduxFormField = <OwnProps, GivenProps = {}>(config: GivenProps) => (
     Component: React.ComponentType<ComponentProps<OwnProps>>,
 ) =>
     class ReduxFormField extends React.PureComponent<

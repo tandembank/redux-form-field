@@ -19,3 +19,5 @@ export const mapInputKeys = <InputProps = {}, OwnProps = {}>(
         },
         {} as TypeOverlap<InputProps, WrappedFieldInputProps>,
     );
+
+export default mapInputKeys;
