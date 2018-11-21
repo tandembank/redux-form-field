@@ -25,7 +25,7 @@ Here the `Basic React Component` is the purely presentational component, built o
 
 #### redux-form Component
 
-Once we have this new shiny component that you are so proud of you'd tell ya mama about, that knows not of the scary word of redux-form, we need to convert it into a `redux-form Component`.
+Once we have this new shiny component that you are so proud of you'd tell yo mama about, that knows not of the scary word of redux-form, we need to convert it into a `redux-form Component`.
 
 This is a component that redux-form can use in the redux-form Field component prop.
 
@@ -39,7 +39,7 @@ import { Fields } from 'redux-form'
 
 This is probably the most complex mapping, and once this is done, as shown above, can use the component to create Fields that redux-form can use in the context of a form.
 
-You might say that as this is the most complex part why is the library not called `redux-form-component`, and to that I say do you hate alliteration? Fine, you can write the library next time!
+You might say that as this is the most complex part of the library, so why is the library not called `redux-form-component`, and to that I say do you hate alliteration? Fine, you can write the library next time!
 
 This mapping is achieved through mapping functions for `prop.meta` and `props.input`, inspired by how you might map redux state and dispatch props.
 
