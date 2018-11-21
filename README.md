@@ -5,6 +5,7 @@
 -   [React Native](#react-native)
 -   [Javascript Example](#js-example)
 -   [Typescript Example](#ts-example)
+-   [Advanced](#advanced)
 
 ## <a name="motivation" />Motivation
 
@@ -88,6 +89,10 @@ Coming... Sometime?
 
 ### Basic Component
 
+Here we outline the basic creation of a completely dumb text input component. The props for the input itself do not conform to the `props.meta` and `props.input` convention set out by redux-form.
+
+The complexity here is driven from the interfaces and the desire to enabled all text input props to be passed through our new component.
+
 ```tsx
 // TextInput.ts
 
@@ -106,16 +111,10 @@ export interface ITextInputMetaProps {
     error?: string;
 }
 
-// Gets all the input props, not including props used in ITextInputInputProps
-type UnmappedInputKeys = Exclude<
-    keyof React.InputHTMLAttributes<HTMLInputElement>,
-    keyof ITextInputInputProps
->;
-
-// Props that come from somewhere else... the ether?
-// Contains all unmapped possible input props not in ITextInputInputProps
-export interface ITextInputOwnProps extends UnmappedInputKeys {
+export interface ITextInputOwnProps {
     label: string;
+    type?: string;
+    autoCapitalize?: string;
 }
 
 export type ITextInputProps = ITextInputInputProps &
@@ -137,6 +136,51 @@ export class TextInput extends React.PureComponent<ITextInputProps> {
 ```
 
 ### redux-form Component
+
+To create the redux-form component that we can pass to the redux-form field component (Urghh, naming...), we now need to create the mapping function for the input & meta props.
+
+#### mapMetaToProps
+
+To map the meta object to our `ITextInputMetaProps` interface we use:
+
+```typescript
+const mapMetaToProps: MapMetaToProps<ITextInputMetaProps> = meta => ({
+    error: meta.touched && meta.error,
+});
+```
+
+This will only show errors once the field has been touched.
+
+#### mapInputToProps
+
+Similarly to `mapMetaToProps` we can map the input props:
+
+```typescript
+export const mapInputToProps: MapInputToProps<ITextInputInputProps> = input => ({
+    onChange: input.onChange,
+    onBlur: input.onBlur,
+    onFocus: input.onFocus,
+    value: input.value,
+});
+```
+
+We do provide a helper method if the key names and types for each of those keys match called `mapInputKeys`.
+As such the above is the same as using:
+
+```typescript
+export const mapInputToProps = mapInputKeys<ITextInputInputProps, ITextInputOwnProps>(
+    'onChange',
+    'onBlur',
+    'onFocus',
+    'value',
+);
+```
+
+**NOTE:** Not only must the keys match, but the types must match as well, else you will get a compilation error.
+
+#### Combining
+
+Finally we can use these mapping functions to create the redux-form field component, mapping the `input` & `meta` props to out base dumb component.
 
 ```typescript
 // TextInputFormComponent.ts
@@ -178,9 +222,9 @@ export default TextInputFormComponent;
 
 ### redux-form Field
 
-Now we can create a numeric only text input redux-form form field component.
+Now we can create a redux-form form field component. Here we shall create a flavour of a text input using our redux-form field component, a numerical input.
 
-Thats a mouthful :rainbow:
+Hope you're not getting confused by this example of a redux-form field mapping a component to a form field component that can be used in a form field, not a mouthful at all :rainbow:
 
 ```typescript
 // NumericFormField.ts
@@ -190,7 +234,7 @@ import { reduxFormField, FormFieldProps } from 'redux-form-field';
 import { ITextInputOwnProps } from './TextInput';
 import TextInputFormComponent from './TextInputFormComponent';
 
-// Overriding keys, these will be stripped from the top level
+// Overriding keys, these will be stripped from the top level interface
 export interface INumericInputFormFieldConfig {
     type: string;
 }
@@ -200,9 +244,7 @@ export type ITextInputFormFieldProps = FormFieldProps<ITextInputOwnProps>;
 export const NumericFormField = reduxFormField<
     ITextInputOwnProps,
     INumericInputFormFieldConfig
->({
-    type: 'numeric',
-})(TextInputFormComponent);
+>({ type: 'numeric' })(TextInputFormComponent);
 
 export default NumericFormField;
 ```
@@ -213,24 +255,47 @@ Within the context of a redux-form form, we can render the new component, withou
 
 The only required props here is the name of the field in the form, plus and required fields in the Basic Component own props.
 
-```typescript
+```tsx
 import NumericFormField from './NumericFormField'
 
 export const NumberForm: React.SFC = () => (
     <>
         <NumericFormField name="Numeric Field" label="Enter a number"
-         {
-             /*
-             Here you can put any text input prop or any redux-form Field prop.
-             The only exceptions are:
-                > component (For Obvs. reason)
-                > type (because its in our INumericInputFormFieldConfig as is set to 'numeric')
-             */
-         }
+         { /* Here you can put any text input own props that have not been mapped, like autoCapitalize. Or any redux-form Field props that have not been mapped either, such as normalize. */ }
         />
     </>
 );
 
 export default reduxForm({ form: 'numeric' })(NumberForm)
 
+```
+
+## <a name="advanced" />Advanced
+
+### Passing Through all input props
+
+It is possible to give access to all the of the underlying html input props at the top level, but requires the use of [typescript 2.8](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html) features.
+
+To do this you need to extend the dumb components `OwnProps` with all props for the native/html input you are wrapping.
+Minus the props provided through `InputProps` and `MetaProps`.
+
+#### Eample
+
+```typescript
+// Get all the input prop keys excluding the ones from ITextInputInputProps
+type UnmappedInputKeys = Exclude<
+    keyof React.InputHTMLAttributes<HTMLInputElement>,
+    keyof ITextInputInputProps
+>;
+
+// Picks the unmapped keys out of the text input props
+type RemainingInputProps = Pick<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    UnmappedInputKeys
+>;
+
+// Extends the remain keys with new own keys
+export interface ITextInputOwnProps extends RemainingInputProps {
+    label: string;
+}
 ```
