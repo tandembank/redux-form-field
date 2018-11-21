@@ -25,7 +25,7 @@ Here the `Basic React Component` is the purely presentational component, built o
 
 #### redux-form Component
 
-Once we have this new shiny component that you are so proud of you'd tell ya mumma about, that knows not of the scary word of redux-form, we need to convert it into a `redux-form Component`.
+Once we have this new shiny component that you are so proud of you'd tell ya mama about, that knows not of the scary word of redux-form, we need to convert it into a `redux-form Component`.
 
 This is a component that redux-form can use in the redux-form Field component prop.
 
