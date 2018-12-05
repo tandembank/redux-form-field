@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { WrappedFieldInputProps, WrappedFieldMetaProps, WrappedFieldProps } from 'redux-form';
+import { WrappedFieldInputProps, WrappedFieldMetaProps } from 'redux-form';
 
 import { ComponentProps } from './@types/redux-form';
 
@@ -27,28 +27,24 @@ export interface ReduxFormFieldComponent<MetaProps, InputProps, OwnProps = {}> {
  *
  * @returns Higher order function that can take a dumb react component and map the redux-form input and meta props to the component
  */
-export function reduxFormComponent<MetaProps = {}, InputProps = {}, OwnProps = {}>(
+export function reduxFormComponent<MetaProps, InputProps, OwnProps>(
     mapMetaToProps: MapMetaToProps<MetaProps, OwnProps>,
     mapInputToProps: MapInputToProps<InputProps, OwnProps>,
 ): ReduxFormFieldComponent<MetaProps, InputProps, OwnProps> {
     return FieldComponent =>
         class extends React.PureComponent<ComponentProps<OwnProps>> {
             render() {
-                const { children, meta, input } = this.props;
+                const { children, meta, input, ...rest } = this.props;
 
-                // FIXME: - Can't use spread for generics, see:
-                // issue https://github.com/Microsoft/TypeScript/issues/10727
-                // PR https://github.com/Microsoft/TypeScript/pull/13288
-                const ownProps = remainingProps<
-                    Readonly<OwnProps>,
-                    Readonly<{ children?: React.ReactNode }> &
-                        Readonly<WrappedFieldProps & OwnProps>
-                >(this.props, 'children', 'meta', 'input');
+                // FIXME: typeof rest === OwnProps.
+                // But TS cannot resolve through key exclusions of ComponentProps<OwnProps>
+                const ownProps = (rest as any) as OwnProps;
 
-                const metaProps = mapMetaToProps ? mapMetaToProps(meta, ownProps) : {};
-                const inputProps = mapInputToProps
-                    ? mapInputToProps(input, ownProps)
-                    : {};
+                const metaProps: MetaProps =
+                    mapMetaToProps && mapMetaToProps(meta, ownProps);
+
+                const inputProps: InputProps =
+                    mapInputToProps && mapInputToProps(input, ownProps);
 
                 return (
                     <FieldComponent {...metaProps} {...inputProps} {...ownProps}>
@@ -58,21 +54,5 @@ export function reduxFormComponent<MetaProps = {}, InputProps = {}, OwnProps = {
             }
         };
 }
-
-const remainingProps = <Prop, Props extends Prop>(
-    props: Props,
-    ...keys: (keyof Props)[]
-): Prop => {
-    const copy = Object.assign({}, props);
-    const stringKeys = keys.map(key => key.toString());
-
-    Object.keys(props).forEach(key => {
-        if (!stringKeys.includes(key)) {
-            copy[key] = props[key];
-        }
-    });
-
-    return copy as Prop;
-};
 
 export default reduxFormComponent;
