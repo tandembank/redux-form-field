@@ -7,7 +7,7 @@ import { Omit, OmitOverlap } from './@types/typescript';
 
 // Removes all the 'used' types from the required field props
 // i.e. all the keys of GivenProps & 'component' from BaseFieldProps<OwnProps> & OwnProps
-export type FormFieldProps<OwnProps, GivenProps = {}> = Omit<
+export type FormFieldProps<OwnProps, GivenProps> = Omit<
     OmitOverlap<FieldProps<OwnProps>, GivenProps>,
     'component'
 >;
@@ -18,7 +18,7 @@ export type FormFieldProps<OwnProps, GivenProps = {}> = Omit<
  *
  * @returns redux-form Field capable component
  */
-export const reduxFormField = <OwnProps, GivenProps = {}>(config: GivenProps) => (
+export const reduxFormField = <OwnProps, GivenProps>(config: GivenProps) => (
     Component: React.ComponentType<ComponentProps<OwnProps>>,
 ) =>
     class ReduxFormField extends React.PureComponent<
@@ -32,7 +32,8 @@ export const reduxFormField = <OwnProps, GivenProps = {}>(config: GivenProps) =>
             return (
                 <ReduxFormField.FormField
                     component={Component}
-                    {...Object.assign({}, config, this.props)}
+                    {...config}
+                    {...this.props}
                 />
             );
         }
