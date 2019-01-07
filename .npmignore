@@ -4,8 +4,10 @@ node_modules/
 .gitignore
 
 #tests
-test
-coverage
+test/
+coverage/
+.jest/
+jest.config.json
 
 #build tools
 .travis.yml
